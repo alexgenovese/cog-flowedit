@@ -1,0 +1,20 @@
+build:
+  gpu: true
+  python_version: "3.10"
+  python_packages:
+    - "torch==2.1.0"
+    - "torchvision==0.16.0"
+    - "diffusers==0.25.0"
+    - "transformers==4.36.0"
+    - "accelerate==0.25.0"
+    - "sentencepiece==0.1.99"
+    - "protobuf==4.25.1"
+    - "pillow==10.0.0"
+    - "numpy==1.24.3"
+    - "huggingface_hub==0.19.4"
+    - "tqdm"
+  run:
+    - curl -o /usr/local/bin/pget -L "https://github.com/replicate/pget/releases/download/v0.0.6/pget" && chmod +x /usr/local/bin/pget
+    - python download_weights.py
+
+predict: "predict.py:Predictor"
