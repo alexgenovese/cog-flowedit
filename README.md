@@ -14,6 +14,23 @@ To run a prediction:
 
 ![](./output.png)
 
+## Recommend settings 
+
+### FLUX
+
+- Steps = 28
+- Guidance (CFG) = 1.5
+- TAR guidance = 5.5
+– n_max = 24
+
+### SD3
+
+- Steps = 50
+- Guidance (CFG) = 3.5
+- TAR guidance = 13.5
+– n_max = 33
+
+
 ## Credits: FlowEdit
 
 [Project](https://matankleiner.github.io/flowedit/) | [Arxiv](https://arxiv.org/abs/2412.08629) | [Demo](https://huggingface.co/spaces/fallenshock/FlowEdit) | [ComfyUI](#comfyui-implementation-for-different-models)

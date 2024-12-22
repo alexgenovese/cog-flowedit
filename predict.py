@@ -6,6 +6,7 @@ from cog import BasePredictor, Input, Path
 from typing import Optional
 import gc
 from FlowEdit_utils import FlowEditSD3, FlowEditFLUX
+from download_weights import download_models
 
 class Predictor(BasePredictor):
     def setup(self):
@@ -14,9 +15,12 @@ class Predictor(BasePredictor):
         self.current_model = None
         self.current_model_type = None
         
+        print("----- Downloading models ------")
+        download_models()
+        print("----- END DOWNLOAD IN CACHE ------")
+        
         # Store paths to model weights
         self.model_paths = {
-            "SD3": "weights/sd3",
             "FLUX": "weights/flux"
         }
 
@@ -37,12 +41,14 @@ class Predictor(BasePredictor):
         if model_type == "SD3":
             self.current_model = StableDiffusion3Pipeline.from_pretrained(
                 self.model_paths["SD3"],
-                torch_dtype=torch.float16
+                torch_dtype=torch.float16,
+                local_files_only=True  # Force loading from local files
             ).to(self.device)
         else:
             self.current_model = FluxPipeline.from_pretrained(
                 self.model_paths["FLUX"],
-                torch_dtype=torch.float16
+                torch_dtype=torch.float16,
+                local_files_only=True  # Force loading from local files
             ).to(self.device)
             
         self.current_model_type = model_type
@@ -53,26 +59,26 @@ class Predictor(BasePredictor):
         image: Path = Input(description="Input image to edit"),
         model_type: str = Input(
             description="Model to use for editing",
-            choices=["SD3", "FLUX"],
-            default="SD3"
+            choices=["FLUX"],
+            default="FLUX"
         ),
         source_prompt: str = Input(description="Description of the input image"),
         target_prompt: str = Input(description="Description of desired output image"),
         num_steps: int = Input(
             description="Total number of discretization steps",
-            default=50,
+            default=28,
             ge=1,
             le=50
         ),
         src_guidance_scale: float = Input(
             description="Source prompt CFG scale",
-            default=3.5,
+            default=1.5,
             ge=1.0,
             le=30.0
         ),
         tar_guidance_scale: float = Input(
             description="Target prompt CFG scale",
-            default=13.5,
+            default=5.5,
             ge=1.0,
             le=30.0
         ),
